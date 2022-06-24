@@ -1,10 +1,16 @@
 import java.util.*;
 
 public class Main {
+    public static void main(String[] args) {
+        Main main = new Main();
+        Integer total = main.romanToInt("IV");
+        System.out.println(total);
+    }
     public int romanToInt(String s) {
 
         Map<Character, Integer> romanMap = new HashMap<>();
         {
+            romanMap.put('O', 0);
             romanMap.put('I', 1);
             romanMap.put('V', 5);
             romanMap.put('X', 10);
@@ -20,17 +26,18 @@ public class Main {
         int secondLast = 2;
         int length = s.length();
         int combinedValue = 0;
+        int singleTotal = 0;
         char secondLastValue = 0;
 
-        for (int i=0; i<length; i++) {
+        while(last <= length) {
 
             char lastValue = strArray[strArray.length - last];
 
             try {
-                if (secondLast < strArray.length) {
+                if (secondLast <= strArray.length) {
                     secondLastValue = strArray[strArray.length - secondLast];
-                } else if (secondLast >= strArray.length) {
-                    secondLastValue = 0;
+                } else {
+                    secondLastValue = 'O';
                 }
             }
             catch (Exception e) {
@@ -41,30 +48,23 @@ public class Main {
             secondLast = secondLast + 1;
 
             try {
-                if (romanMap.get(lastValue) > romanMap.get(secondLastValue)) {
+                if (romanMap.get(lastValue) > romanMap.get(secondLastValue) && !(secondLastValue == 'O')) {
                     combinedValue = romanMap.get(lastValue) - romanMap.get(secondLastValue);
                     last = last + 1;
                     secondLast = secondLast + 1;
-                    System.out.println("ITERATION " + i);
-                    System.out.println("LAST VALUE " + lastValue);
-                    System.out.println("SECOND LAST VALUE " + secondLastValue);
-                    System.out.println("COMBINED VALUE " + combinedValue);
-                } else if (secondLastValue = null) {
-                    total = total + romanMap.get(lastValue);
-                    System.out.println("TOTAL " + total);
-                }
+                } else
+                    singleTotal = romanMap.get(lastValue);
             }
             catch (Exception e) {
                 throw new NullPointerException();
             }
 
-            total = combinedValue + total;
+            total = singleTotal + combinedValue + total;
+            combinedValue = 0;
+            singleTotal = 0;
         }
 
         System.out.println(total);
         return total;
     }
 }
-
-//else if (secondLast == strArray.length){
-//                throw new IndexOutOfBoundsException();
